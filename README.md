@@ -3,29 +3,31 @@
 Bibliotheca app is divided into two projects: back and front. You can find detailed information about those projects in their README files.
 Bibliotheca UI includes the following main pages:
 
-## Sign in/ sign up
-
-![auth view]()
-<br>The user can log in or create a new user from this view. Provide both input fields in each case.
-
----
-
-### Book list
-
-![book list]()
-<br>The user can see her book list and also edit/remove a book from her book list using the edit and delete buttons.
+## Log in/ Sign up
+The user can log in or create a new user from this view. Both input fields are mandatory.<br><br>
+![login](https://user-images.githubusercontent.com/6905544/213213991-260ba1b9-8e05-46b7-a030-0b48472881e5.JPG)
 
 ---
 
-### New book
+## Homepage
+The homepage includes the navigation menu, from the user can navigate to different pages.<br><br>
+![homepage](https://user-images.githubusercontent.com/6905544/213212729-22177711-107e-4546-9c5e-321ed464ca8d.JPG)
 
-![new book]()
-<br>The user can add a new book to her book list.
+## Book list
 
-### Edit book
+The user can see her book list and also edit/remove a book from her book list using the edit and delete buttons.<br><br>
+![book_list](https://user-images.githubusercontent.com/6905544/213212943-781d7041-ecfb-4589-8803-a6275e841c41.JPG)
 
-![edit book]()
-<br>The user can edit the title of an existing book in her list.
+## New book
+
+The user can add a new book to her book list.<br><br>
+![new_book](https://user-images.githubusercontent.com/6905544/213214622-9afd3da5-5ddd-4f2c-bdf3-604062942ca6.JPG)
+
+
+## Edit book
+The user can edit the title of an existing book in her list.<br><br>
+![edit_book](https://user-images.githubusercontent.com/6905544/213214766-4e9c0225-e1f8-4a2b-a7b9-940b98b4971c.JPG)
+
 
 # Docker images
 
