@@ -1,6 +1,6 @@
-import { Link, useRouteError } from "react-router-dom";
-import { getErrorMessage } from "../helpers/error.js";
-import NotFound from "../pages/notFound.jsx";
+import { Link, useRouteError } from 'react-router-dom';
+import { getErrorMessage } from '../helpers/error.js';
+import NotFound from '../pages/notFound.jsx';
 
 function ErrorBoundary() {
   const error = useRouteError();
@@ -9,7 +9,7 @@ function ErrorBoundary() {
   return (
     <>
       {(() => {
-        switch (error.response.status) {
+        switch (error.response?.status) {
           case 403:
             return (
               <div>

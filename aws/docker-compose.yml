@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  nginx:
+    image: 429605438458.dkr.ecr.us-east-1.amazonaws.com/bibliotheca-nginx
+    depends_on:
+      - back
+      - front
+    ports:
+      - "80:80"
+  back:
+    image: 429605438458.dkr.ecr.us-east-1.amazonaws.com/bibliotheca-back
+    environment:
+      JWT_KEY: "not secret"
+      DB_PATH: "./assets/db"
+  front:
+    image: 429605438458.dkr.ecr.us-east-1.amazonaws.com/bibliotheca-front
+    environment:
+      DANGEROUSLY_DISABLE_HOST_CHECK: true
+      REACT_APP_LOGO_DIR: "src/assets/images"
+      REACT_APP_LOGO: "src/assets/images/bibliotheca.png"

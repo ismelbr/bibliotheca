@@ -2,6 +2,14 @@
   "name": "client",
   "version": "0.1.0",
   "private": true,
+  "jest": {
+    "moduleNameMapper": {
+      "@biblologo": "<rootDir>/src/assets/images/books.png"
+    },
+    "transformIgnorePatterns": [
+      "node_modules/(?!react-native|react-navigation)/"
+    ]
+  },
   "dependencies": {
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
@@ -27,13 +35,8 @@
     "start": "craco start",
     "build": "craco build",
     "test": "craco test",
-    "eject": "craco eject"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
+    "eject": "craco eject",
+    "prepare": "husky install"
   },
   "browserslist": {
     "production": [
@@ -49,7 +52,14 @@
   },
   "devDependencies": {
     "@craco/craco": "^7.0.0",
-    "prettier": "^2.8.2"
+    "husky": "^8.0.3",
+    "jest-watch-typeahead": "^0.6.5",
+    "lint-staged": "^13.1.0",
+    "prettier": "^2.8.2",
+    "redux-mock-store": "^1.5.4"
   },
-  "proxy": "http://localhost:3001"
+  "proxy": "http://localhost:3001",
+  "lint-staged": {
+    "*./src": "prettier --write"
+  }
 }

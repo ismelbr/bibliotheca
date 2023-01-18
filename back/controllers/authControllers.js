@@ -9,7 +9,7 @@ const generateAccessToken = (username) =>
     {
       username: username,
     },
-    /*'no-secret-at-all-123456',*/ process.env.JWT_KEY,
+    process.env.JWT_KEY,
     {
       expiresIn: 86400, // 24 hours
     },

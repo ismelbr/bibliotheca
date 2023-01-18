@@ -4,7 +4,7 @@ const fs = require('fs');
 const { removeAllUsers } = require('../db/models/users');
 
 describe('User authentication', () => {
-  beforeAll(async () => {
+  beforeEach(async () => {
     await removeAllUsers();
   });
 
@@ -20,11 +20,11 @@ describe('User authentication', () => {
   it('shouldnt be able to create the same user twice', async () => {
     await request(app)
       .post('/api/auth/register')
-      .send({ username: 'reader2', password: 'goodreader' });
+      .send({ username: 'reader1', password: 'goodreader' });
 
     const res = await request(app)
       .post('/api/auth/register')
-      .send({ username: 'reader2', password: 'goodreader' });
+      .send({ username: 'reader1', password: 'goodreader' });
     expect(res.statusCode).toEqual(409);
   });
 });

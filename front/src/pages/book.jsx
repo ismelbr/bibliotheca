@@ -48,6 +48,7 @@ export default function Book() {
     <Box component="form" noValidate autoComplete="off">
       <div>
         <TextField
+          id="title"
           error={!validTitle}
           label="Book title"
           fullWidth

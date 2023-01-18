@@ -1,22 +1,20 @@
 import { Box, Button, Grid, TextField, Typography } from '@mui/material';
 import { Stack } from '@mui/system';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getErrorMessage } from '../helpers/error';
 import useAuth from '../hooks/useAuth';
 import Logo from '@biblologo';
 
 const Auth = () => {
-  const usernameRef = useRef();
-  const passwordRef = useRef();
   const navigate = useNavigate();
   const { signin, signup } = useAuth();
 
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+
   const authHandler = (event, isLogin) => {
     event.preventDefault();
-
-    const username = usernameRef.current.value;
-    const password = passwordRef.current.value;
 
     let auth;
 
@@ -36,7 +34,9 @@ const Auth = () => {
       });
   };
 
-  console.log(process.env.REACT_APP_LOGO_DIR);
+  const validateForm = () => {
+    return username.length & password.length;
+  };
 
   return (
     <Grid
@@ -56,7 +56,7 @@ const Auth = () => {
               height: 32,
             }}
             alt="Your logo."
-            src={/*`${process.env.REACT_APP_LOGO_DIR}/books.png`*/ Logo}
+            src={Logo}
           />
         </Stack>
       </Grid>
@@ -66,14 +66,31 @@ const Auth = () => {
             label="Username"
             fullWidth
             sx={{ marginBottom: '15px' }}
-            inputRef={usernameRef}
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            required
           />
-          <TextField label="Password" type="password" fullWidth inputRef={passwordRef} />
+          <TextField
+            label="Password"
+            type="password"
+            fullWidth
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
           <Stack direction="row" spacing={3} sx={{ marginTop: '15px' }}>
-            <Button variant="contained" onClick={(e) => authHandler(e, true)}>
+            <Button
+              variant="contained"
+              disabled={!validateForm()}
+              onClick={(e) => authHandler(e, true)}
+            >
               Log in
             </Button>
-            <Button variant="contained" onClick={(e) => authHandler(e, false)}>
+            <Button
+              variant="contained"
+              disabled={!validateForm()}
+              onClick={(e) => authHandler(e, false)}
+            >
               Sign up
             </Button>
           </Stack>

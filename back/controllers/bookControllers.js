@@ -1,4 +1,5 @@
 const db = require('../db/index');
+const CustomError = require('../utils/CustomError');
 
 const getBook = async (req, res, next) => {
   const username = req.username;
@@ -34,7 +35,7 @@ const addBook = async (req, res, next) => {
       throw new CustomError('Book is already in your book list.', 409);
     }
     const book = await db.books.addBook(username, bookTitle);
-    res.send(book);
+    res.status(201).send(book);
   } catch (error) {
     next(error);
   }

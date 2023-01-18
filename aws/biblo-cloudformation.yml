@@ -1,0 +1,461 @@
+AWSTemplateFormatVersion: 2010-09-09
+Resources:
+  BackService:
+    Properties:
+      Cluster:
+        Fn::GetAtt:
+        - Cluster
+        - Arn
+      DeploymentConfiguration:
+        MaximumPercent: 200
+        MinimumHealthyPercent: 100
+      DeploymentController:
+        Type: ECS
+      DesiredCount: 1
+      LaunchType: FARGATE
+      NetworkConfiguration:
+        AwsvpcConfiguration:
+          AssignPublicIp: ENABLED
+          SecurityGroups:
+          - Ref: DefaultNetwork
+          Subnets:
+          - subnet-013af8c58ec045e05
+          - subnet-0a54fc4a768493239
+          - subnet-095774d144df27c05
+          - subnet-05c6be430880c82f4
+          - subnet-0b0280211900eb806
+          - subnet-08cad3c69266fe99b
+      PlatformVersion: 1.4.0
+      PropagateTags: SERVICE
+      SchedulingStrategy: REPLICA
+      ServiceRegistries:
+      - RegistryArn:
+          Fn::GetAtt:
+          - BackServiceDiscoveryEntry
+          - Arn
+      Tags:
+      - Key: com.docker.compose.project
+        Value: aws
+      - Key: com.docker.compose.service
+        Value: back
+      TaskDefinition:
+        Ref: BackTaskDefinition
+    Type: AWS::ECS::Service
+  BackServiceDiscoveryEntry:
+    Properties:
+      Description: '"back" service discovery entry in Cloud Map'
+      DnsConfig:
+        DnsRecords:
+        - TTL: 60
+          Type: A
+        RoutingPolicy: MULTIVALUE
+      HealthCheckCustomConfig:
+        FailureThreshold: 1
+      Name: back
+      NamespaceId:
+        Ref: CloudMap
+    Type: AWS::ServiceDiscovery::Service
+  BackTaskDefinition:
+    Properties:
+      ContainerDefinitions:
+      - Command:
+        - us-east-1.compute.internal
+        - aws.local
+        Essential: false
+        Image: docker/ecs-searchdomain-sidecar:1.0
+        LogConfiguration:
+          LogDriver: awslogs
+          Options:
+            awslogs-group:
+              Ref: LogGroup
+            awslogs-region:
+              Ref: AWS::Region
+            awslogs-stream-prefix: aws
+        Name: Back_ResolvConf_InitContainer
+      - DependsOn:
+        - Condition: SUCCESS
+          ContainerName: Back_ResolvConf_InitContainer
+        Environment:
+        - Name: DB_PATH
+          Value: ./assets/db
+        - Name: JWT_KEY
+          Value: not secret
+        Essential: true
+        Image: 429605438458.dkr.ecr.us-east-1.amazonaws.com/bibliotheca-back:latest@sha256:20e30c628e30cbf1c302e418ae2ff6c10f08cd0a5cb88ad6b5f6061686ab99a6
+        LinuxParameters: {}
+        LogConfiguration:
+          LogDriver: awslogs
+          Options:
+            awslogs-group:
+              Ref: LogGroup
+            awslogs-region:
+              Ref: AWS::Region
+            awslogs-stream-prefix: aws
+        Name: back
+      Cpu: "256"
+      ExecutionRoleArn:
+        Ref: BackTaskExecutionRole
+      Family: aws-back
+      Memory: "512"
+      NetworkMode: awsvpc
+      RequiresCompatibilities:
+      - FARGATE
+    Type: AWS::ECS::TaskDefinition
+  BackTaskExecutionRole:
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+        - Action:
+          - sts:AssumeRole
+          Condition: {}
+          Effect: Allow
+          Principal:
+            Service: ecs-tasks.amazonaws.com
+        Version: 2012-10-17
+      ManagedPolicyArns:
+      - arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy
+      - arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly
+      Tags:
+      - Key: com.docker.compose.project
+        Value: aws
+      - Key: com.docker.compose.service
+        Value: back
+    Type: AWS::IAM::Role
+  CloudMap:
+    Properties:
+      Description: Service Map for Docker Compose project aws
+      Name: aws.local
+      Vpc: vpc-0c6f28b04f94a08b4
+    Type: AWS::ServiceDiscovery::PrivateDnsNamespace
+  Cluster:
+    Properties:
+      ClusterName: aws
+      Tags:
+      - Key: com.docker.compose.project
+        Value: aws
+    Type: AWS::ECS::Cluster
+  Default80Ingress:
+    Properties:
+      CidrIp: 0.0.0.0/0
+      Description: nginx:80/tcp on default network
+      FromPort: 80
+      GroupId:
+        Ref: DefaultNetwork
+      IpProtocol: TCP
+      ToPort: 80
+    Type: AWS::EC2::SecurityGroupIngress
+  DefaultNetwork:
+    Properties:
+      GroupDescription: aws Security Group for default network
+      Tags:
+      - Key: com.docker.compose.project
+        Value: aws
+      - Key: com.docker.compose.network
+        Value: aws_default
+      VpcId: vpc-0c6f28b04f94a08b4
+    Type: AWS::EC2::SecurityGroup
+  DefaultNetworkIngress:
+    Properties:
+      Description: Allow communication within network default
+      GroupId:
+        Ref: DefaultNetwork
+      IpProtocol: "-1"
+      SourceSecurityGroupId:
+        Ref: DefaultNetwork
+    Type: AWS::EC2::SecurityGroupIngress
+  FrontService:
+    Properties:
+      Cluster:
+        Fn::GetAtt:
+        - Cluster
+        - Arn
+      DeploymentConfiguration:
+        MaximumPercent: 200
+        MinimumHealthyPercent: 100
+      DeploymentController:
+        Type: ECS
+      DesiredCount: 1
+      LaunchType: FARGATE
+      NetworkConfiguration:
+        AwsvpcConfiguration:
+          AssignPublicIp: ENABLED
+          SecurityGroups:
+          - Ref: DefaultNetwork
+          Subnets:
+          - subnet-013af8c58ec045e05
+          - subnet-0a54fc4a768493239
+          - subnet-095774d144df27c05
+          - subnet-05c6be430880c82f4
+          - subnet-0b0280211900eb806
+          - subnet-08cad3c69266fe99b
+      PlatformVersion: 1.4.0
+      PropagateTags: SERVICE
+      SchedulingStrategy: REPLICA
+      ServiceRegistries:
+      - RegistryArn:
+          Fn::GetAtt:
+          - FrontServiceDiscoveryEntry
+          - Arn
+      Tags:
+      - Key: com.docker.compose.project
+        Value: aws
+      - Key: com.docker.compose.service
+        Value: front
+      TaskDefinition:
+        Ref: FrontTaskDefinition
+    Type: AWS::ECS::Service
+  FrontServiceDiscoveryEntry:
+    Properties:
+      Description: '"front" service discovery entry in Cloud Map'
+      DnsConfig:
+        DnsRecords:
+        - TTL: 60
+          Type: A
+        RoutingPolicy: MULTIVALUE
+      HealthCheckCustomConfig:
+        FailureThreshold: 1
+      Name: front
+      NamespaceId:
+        Ref: CloudMap
+    Type: AWS::ServiceDiscovery::Service
+  FrontTaskDefinition:
+    Properties:
+      ContainerDefinitions:
+      - Command:
+        - us-east-1.compute.internal
+        - aws.local
+        Essential: false
+        Image: docker/ecs-searchdomain-sidecar:1.0
+        LogConfiguration:
+          LogDriver: awslogs
+          Options:
+            awslogs-group:
+              Ref: LogGroup
+            awslogs-region:
+              Ref: AWS::Region
+            awslogs-stream-prefix: aws
+        Name: Front_ResolvConf_InitContainer
+      - DependsOn:
+        - Condition: SUCCESS
+          ContainerName: Front_ResolvConf_InitContainer
+        Environment:
+        - Name: DANGEROUSLY_DISABLE_HOST_CHECK
+          Value: "true"
+        - Name: REACT_APP_LOGO
+          Value: src/assets/images/bibliotheca.png
+        - Name: REACT_APP_LOGO_DIR
+          Value: src/assets/images
+        Essential: true
+        Image: 429605438458.dkr.ecr.us-east-1.amazonaws.com/bibliotheca-front:latest@sha256:eb270cdf2223e5c09a42f692494bad4bd411726595c1b8137e1b686cbf7fc1f9
+        LinuxParameters: {}
+        LogConfiguration:
+          LogDriver: awslogs
+          Options:
+            awslogs-group:
+              Ref: LogGroup
+            awslogs-region:
+              Ref: AWS::Region
+            awslogs-stream-prefix: aws
+        Name: front
+      Cpu: "256"
+      ExecutionRoleArn:
+        Ref: FrontTaskExecutionRole
+      Family: aws-front
+      Memory: "1024"
+      NetworkMode: awsvpc
+      RequiresCompatibilities:
+      - FARGATE
+    Type: AWS::ECS::TaskDefinition
+  FrontTaskExecutionRole:
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+        - Action:
+          - sts:AssumeRole
+          Condition: {}
+          Effect: Allow
+          Principal:
+            Service: ecs-tasks.amazonaws.com
+        Version: 2012-10-17
+      ManagedPolicyArns:
+      - arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy
+      - arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly
+      Tags:
+      - Key: com.docker.compose.project
+        Value: aws
+      - Key: com.docker.compose.service
+        Value: front
+    Type: AWS::IAM::Role
+  LoadBalancer:
+    Properties:
+      Scheme: internet-facing
+      SecurityGroups:
+      - Ref: DefaultNetwork
+      Subnets:
+      - subnet-013af8c58ec045e05
+      - subnet-0a54fc4a768493239
+      - subnet-095774d144df27c05
+      - subnet-05c6be430880c82f4
+      - subnet-0b0280211900eb806
+      - subnet-08cad3c69266fe99b
+      Tags:
+      - Key: com.docker.compose.project
+        Value: aws
+      Type: application
+    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
+  LogGroup:
+    Properties:
+      LogGroupName: /docker-compose/aws
+    Type: AWS::Logs::LogGroup
+  NginxService:
+    DependsOn:
+    - NginxTCP80Listener
+    - BackService
+    - FrontService
+    Properties:
+      Cluster:
+        Fn::GetAtt:
+        - Cluster
+        - Arn
+      DeploymentConfiguration:
+        MaximumPercent: 200
+        MinimumHealthyPercent: 100
+      DeploymentController:
+        Type: ECS
+      DesiredCount: 1
+      LaunchType: FARGATE
+      LoadBalancers:
+      - ContainerName: nginx
+        ContainerPort: 80
+        TargetGroupArn:
+          Ref: NginxTCP80TargetGroup
+      NetworkConfiguration:
+        AwsvpcConfiguration:
+          AssignPublicIp: ENABLED
+          SecurityGroups:
+          - Ref: DefaultNetwork
+          Subnets:
+          - subnet-013af8c58ec045e05
+          - subnet-0a54fc4a768493239
+          - subnet-095774d144df27c05
+          - subnet-05c6be430880c82f4
+          - subnet-0b0280211900eb806
+          - subnet-08cad3c69266fe99b
+      PlatformVersion: 1.4.0
+      PropagateTags: SERVICE
+      SchedulingStrategy: REPLICA
+      ServiceRegistries:
+      - RegistryArn:
+          Fn::GetAtt:
+          - NginxServiceDiscoveryEntry
+          - Arn
+      Tags:
+      - Key: com.docker.compose.project
+        Value: aws
+      - Key: com.docker.compose.service
+        Value: nginx
+      TaskDefinition:
+        Ref: NginxTaskDefinition
+    Type: AWS::ECS::Service
+  NginxServiceDiscoveryEntry:
+    Properties:
+      Description: '"nginx" service discovery entry in Cloud Map'
+      DnsConfig:
+        DnsRecords:
+        - TTL: 60
+          Type: A
+        RoutingPolicy: MULTIVALUE
+      HealthCheckCustomConfig:
+        FailureThreshold: 1
+      Name: nginx
+      NamespaceId:
+        Ref: CloudMap
+    Type: AWS::ServiceDiscovery::Service
+  NginxTCP80Listener:
+    Properties:
+      DefaultActions:
+      - ForwardConfig:
+          TargetGroups:
+          - TargetGroupArn:
+              Ref: NginxTCP80TargetGroup
+        Type: forward
+      LoadBalancerArn:
+        Ref: LoadBalancer
+      Port: 80
+      Protocol: HTTP
+    Type: AWS::ElasticLoadBalancingV2::Listener
+  NginxTCP80TargetGroup:
+    Properties:
+      Port: 80
+      Protocol: HTTP
+      Tags:
+      - Key: com.docker.compose.project
+        Value: aws
+      TargetType: ip
+      VpcId: vpc-0c6f28b04f94a08b4
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+  NginxTaskDefinition:
+    Properties:
+      ContainerDefinitions:
+      - Command:
+        - us-east-1.compute.internal
+        - aws.local
+        Essential: false
+        Image: docker/ecs-searchdomain-sidecar:1.0
+        LogConfiguration:
+          LogDriver: awslogs
+          Options:
+            awslogs-group:
+              Ref: LogGroup
+            awslogs-region:
+              Ref: AWS::Region
+            awslogs-stream-prefix: aws
+        Name: Nginx_ResolvConf_InitContainer
+      - DependsOn:
+        - Condition: SUCCESS
+          ContainerName: Nginx_ResolvConf_InitContainer
+        Essential: true
+        Image: 429605438458.dkr.ecr.us-east-1.amazonaws.com/bibliotheca-nginx:latest@sha256:8df1524fef1d2cb6d35b4a94355c10681820314ce0154f94e14dc8e8c5243fa9
+        LinuxParameters: {}
+        LogConfiguration:
+          LogDriver: awslogs
+          Options:
+            awslogs-group:
+              Ref: LogGroup
+            awslogs-region:
+              Ref: AWS::Region
+            awslogs-stream-prefix: aws
+        Name: nginx
+        PortMappings:
+        - ContainerPort: 80
+          HostPort: 80
+          Protocol: tcp
+      Cpu: "256"
+      ExecutionRoleArn:
+        Ref: NginxTaskExecutionRole
+      Family: aws-nginx
+      Memory: "512"
+      NetworkMode: awsvpc
+      RequiresCompatibilities:
+      - FARGATE
+    Type: AWS::ECS::TaskDefinition
+  NginxTaskExecutionRole:
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+        - Action:
+          - sts:AssumeRole
+          Condition: {}
+          Effect: Allow
+          Principal:
+            Service: ecs-tasks.amazonaws.com
+        Version: 2012-10-17
+      ManagedPolicyArns:
+      - arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy
+      - arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly
+      Tags:
+      - Key: com.docker.compose.project
+        Value: aws
+      - Key: com.docker.compose.service
+        Value: nginx
+    Type: AWS::IAM::Role

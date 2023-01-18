@@ -1,70 +1,61 @@
-# Getting Started with Create React App
+# Bibliotheca application with React
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This project contains the code for the Bibliotheca web application.
+It is built in ReactJS and MUI. MUI provides style to the application.
+One test was added as an example of test that could be added (`see App.test.js`).
+
+## Project setup
+
+```
+npm install
+```
 
 ## Available Scripts
 
 In the project directory, you can run:
 
-### `npm start`
+```
+npm start
+```
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Runs the app in the development mode. Open [http://localhost:3000](http://localhost:3000) to view it in your browser. The page will reload when you make changes.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Installed packages
 
-### `npm test`
+- axios: A promise-based HTTP Client in both the browser and Node.js to send requests to the back api.
+- react-redux: State management library for react.
+- reduxjs/toolkit: Simplify common use cases like store setup, creating reducers, immutable update logic.
+- react-router-dom: Enable us to implement dynamic routing in a web app.
+- mui: An open-source React component library that implements Google's Material Design.
+- testing-library: A library for testing React applications.
+- husky and lint-staged: They will automatically format supported files in a pre-commit hook before committing them.
+- craco: An easy and comprehensible configuration layer for create-react-app. This way we can set logo in enviroment variables without modifying webpack.config.js.
+- prettier: Project code formatter.
+- redux-mock-store: A mock store for testing Redux async action creators and middleware.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Routes
 
-### `npm run build`
+- /signin - Render component that allows the user to log in or create a new user.
+- /home - App homepage. Just the menu navigation of the app.
+- /books - Render the list of user's books.
+- /books/:bookId - Render the detail of a specific book.
+- /newbook- Render the component that allows the user to add a new book to the list.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Pages
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+- homepage: The user is able to navigate to the different menu navigation options. It shows a quote from Don Quixote.
+- book list: The user can update and delete books from her list in this page.
+- book detail: The user can edit the title of a given book in her book list.
+- new book: The user can add a new book to her list. Duplicate book title are not valid.
+  This validation is checked in the client and server side.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Store
 
-### `npm run eject`
+The application state includes 2 slides: `auth` and `books`.
+The former contains the info about the logged user and the second one includes her book lists.
+(check `/store` folder for extra info)
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## Custom Hooks
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- useAuth: reusable functions to handle application state about the user.
+- useBook: reusable functions to handle application state about user's books.

@@ -15,8 +15,6 @@ const userSlice = createSlice({
     login: (state, action) => {
       state.username = action.payload.username;
       state.accessToken = action.payload.accessToken;
-
-      console.log(action.payload);
       localStorage.setItem('user', JSON.stringify(state));
     },
     logout: (state, action) => {

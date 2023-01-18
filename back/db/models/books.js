@@ -9,7 +9,8 @@ const books = new JsonDB(
 
 const isInMyList = async (username, bookTitle) => {
   let userBooks = await getBooks(username);
-  return (userBooks.books || []).includes(bookTitle);
+  const book = (userBooks.books || []).find((b) => b.title === bookTitle);
+  return !!book;
 };
 
 const getBooks = async (username) => {
@@ -59,7 +60,7 @@ const updateBook = async (username, bookId, newBookTitle) => {
 };
 
 const removeAllBooks = async () => {
-  await users.push('/', {});
+  await books.push('/', {});
 };
 
 module.exports = {

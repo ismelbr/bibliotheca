@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const verifyToken = require('../middlewares/auth.js');
+const authMiddleware = require('../middlewares/auth.js');
 
 const {
   getBook,
@@ -10,10 +10,10 @@ const {
   editBook,
 } = require('../controllers/bookControllers.js');
 
-router.get('/', [verifyToken], getBooks);
-router.post('/', [verifyToken], addBook);
-router.get('/:bookId', [verifyToken], getBook);
-router.delete('/:bookId', [verifyToken], removeBook);
-router.post('/:bookId', [verifyToken], editBook);
+router.get('/', [authMiddleware.verifyToken], getBooks);
+router.post('/', [authMiddleware.verifyToken], addBook);
+router.get('/:bookId', [authMiddleware.verifyToken], getBook);
+router.delete('/:bookId', [authMiddleware.verifyToken], removeBook);
+router.post('/:bookId', [authMiddleware.verifyToken], editBook);
 
 module.exports = router;
