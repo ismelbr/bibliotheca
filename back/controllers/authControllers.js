@@ -59,7 +59,32 @@ const register = async (req, res, next) => {
   }
 };
 
+const password = async (req, res, next) => {
+  try {
+    const user = await db.users.getUser(req.body.username);
+    if (!user) {
+      throw new CustomError('User not found.', 404);
+    }
+
+    const passwordIsValid = bcrypt.compareSync(req.body.oldPassword, user.password);
+
+    if (!passwordIsValid) {
+      throw new CustomError('Invalid Password!', 401);
+    }
+
+    await db.users.addUser(req.body.username, bcrypt.hashSync(req.body.newPassword, 8));
+
+    res.status(200).send({
+      username: user.username,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   login,
   register,
+  password,
+  generateAccessToken,
 };

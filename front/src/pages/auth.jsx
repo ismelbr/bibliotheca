@@ -35,7 +35,7 @@ const Auth = () => {
   };
 
   const validateForm = () => {
-    return username.length & password.length;
+    return username.length && password.length;
   };
 
   return (
