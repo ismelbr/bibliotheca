@@ -49,7 +49,7 @@ Runs the app in the development mode. Open [http://localhost:3000](http://localh
 - book detail: The user can edit the title of a given book in her book list.
 - new book: The user can add a new book to her list. Duplicate book title are not valid.
   This validation is checked in the client and server side.
-- password: The user can modify his password on this page.
+- password: The user can modify her password on this page.
 
 ## Store
 
