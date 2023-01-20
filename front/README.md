@@ -40,6 +40,7 @@ Runs the app in the development mode. Open [http://localhost:3000](http://localh
 - /books - Render the list of user's books.
 - /books/:bookId - Render the detail of a specific book.
 - /newbook- Render the component that allows the user to add a new book to the list.
+- /password- Render the component that allows the user modified her password.
 
 ## Pages
 
@@ -48,6 +49,7 @@ Runs the app in the development mode. Open [http://localhost:3000](http://localh
 - book detail: The user can edit the title of a given book in her book list.
 - new book: The user can add a new book to her list. Duplicate book title are not valid.
   This validation is checked in the client and server side.
+- password: The user can modify his password on this page.
 
 ## Store
 

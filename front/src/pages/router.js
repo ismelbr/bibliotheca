@@ -7,6 +7,7 @@ import BookList from './bookList';
 import Home from './home';
 import NotFound from './notFound';
 import RootLayout from './rootLayout';
+import Password from './password';
 
 const router = createBrowserRouter([
   {
@@ -22,6 +23,10 @@ const router = createBrowserRouter([
     ),
     errorElement: <ErrorBoundary />,
     children: [
+      {
+        path: '/password',
+        element: <Password />,
+      },
       {
         path: '/home',
         element: <Home />,

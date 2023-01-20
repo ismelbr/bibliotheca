@@ -46,7 +46,7 @@ export default function MainNavigation() {
 
           <Box sx={{ flexGrow: 0 }}>
             <Button
-              onClick={() => navigate('/signin')}
+              onClick={() => navigate('/password')}
               sx={{ my: 2, color: 'white', display: 'block' }}
             >
               {username}

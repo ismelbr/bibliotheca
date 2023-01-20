@@ -39,6 +39,7 @@ One of them checks that a user can add duplicate books.
 - POST /api/auth/login - check whether the user provided valid credentials, in such case, a token is generated.
   That token should be part of all the requests the user sends to the api.
 - POST /api/auth/register - create a new user.
+- POST /api/auth/password - change user password
 
 ### Characters
 

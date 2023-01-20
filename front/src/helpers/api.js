@@ -10,6 +10,25 @@ function authHeader() {
   }
 }
 
+export async function changeUserPassword(username, oldPassword, newPassword) {
+  try {
+    const response = await axios.post(
+      `/api/auth/password`,
+      {
+        username,
+        oldPassword,
+        newPassword,
+      },
+      {
+        headers: authHeader(),
+      },
+    );
+    return response.data.books;
+  } catch (error) {
+    throw error;
+  }
+}
+
 export async function getBooks() {
   try {
     const response = await axios.get(`/api/books`, {
@@ -35,8 +54,8 @@ export async function getBook(bookId) {
 export async function checkUserCrendentials(isLogin, username, password) {
   try {
     const response = await axios.post(isLogin ? '/api/auth/login' : '/api/auth/register', {
-      username: username,
-      password: password,
+      username,
+      password,
     });
     return response.data;
   } catch (error) {
