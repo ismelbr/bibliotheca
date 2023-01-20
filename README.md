@@ -28,6 +28,9 @@ The user can add a new book to her book list.<br><br>
 The user can edit the title of an existing book in her list.<br><br>
 ![edit_book](https://user-images.githubusercontent.com/6905544/213214766-4e9c0225-e1f8-4a2b-a7b9-940b98b4971c.JPG)
 
+## New password
+![new_password](https://user-images.githubusercontent.com/6905544/213663829-f62b4360-9ee8-4f9a-84b1-6699c20ff90b.JPG)
+The user can modify her password on this page.
 
 # Docker images
 
