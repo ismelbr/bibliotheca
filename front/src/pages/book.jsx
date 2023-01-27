@@ -1,6 +1,6 @@
+import { Button } from '@mui/material';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
-import { Button } from '@mui/material';
 import { Stack } from '@mui/system';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -48,6 +48,7 @@ export default function Book() {
     <Box component="form" noValidate autoComplete="off">
       <div>
         <TextField
+          aria-label="title"
           id="title"
           error={!validTitle}
           label="Book title"
@@ -58,10 +59,20 @@ export default function Book() {
         />
       </div>
       <Stack direction="row" spacing={2} sx={{ marginTop: '10px' }}>
-        <Button variant="contained" disabled={title.length === 0} onClick={saveBookHandler}>
+        <Button
+          aria-label="save"
+          variant="contained"
+          disabled={title.length === 0}
+          onClick={saveBookHandler}
+        >
           Save
         </Button>
-        <Button variant="contained" disabled={title.length === 0} onClick={clearTitleHandler}>
+        <Button
+          aria-label="clear"
+          variant="contained"
+          disabled={title.length === 0}
+          onClick={clearTitleHandler}
+        >
           Clear
         </Button>
       </Stack>

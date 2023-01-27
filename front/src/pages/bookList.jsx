@@ -1,9 +1,9 @@
-import { DataGrid } from '@mui/x-data-grid';
-import { useSelector } from 'react-redux';
-import { IconButton } from '@mui/material';
-import { Stack } from '@mui/system';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
+import { IconButton } from '@mui/material';
+import { Stack } from '@mui/system';
+import { DataGrid } from '@mui/x-data-grid';
+import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import useBook from '../hooks/useBook';
 
@@ -46,10 +46,16 @@ export default function BookList() {
       renderCell: (params) => {
         return (
           <Stack direction="row" spacing={2} sx={{ marginBottom: '10px' }}>
-            <IconButton aria-label="edit" onClick={(e) => editHandler(e, params.row.id)}>
+            <IconButton
+              aria-label={`edit_${params.row.id}`}
+              onClick={(e) => editHandler(e, params.row.id)}
+            >
               <EditIcon />
             </IconButton>
-            <IconButton aria-label="delete" onClick={(e) => deleteHandler(e, params.row.id)}>
+            <IconButton
+              aria-label={`delete_${params.row.id}`}
+              onClick={(e) => deleteHandler(e, params.row.id)}
+            >
               <DeleteIcon />
             </IconButton>
           </Stack>
